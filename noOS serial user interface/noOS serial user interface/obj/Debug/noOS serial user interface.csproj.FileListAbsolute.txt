@@ -13,3 +13,9 @@ C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial us
 C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Debug\noOS_serial_user_interface.menuOverview.resources
 C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Debug\noOS_serial_user_interface.menuCompass.resources
 C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Debug\noOS_serial_user_interface.menuKicker.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Debug\noOS_serial_user_interface.menuSettings.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Debug\noOS_serial_user_interface.menuShutdown.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\bin\Debug\noOS serial user interface.exe.manifest
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\bin\Debug\noOS serial user interface.application
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Debug\noOS serial user interface.exe.manifest
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Debug\noOS serial user interface.application

@@ -1,0 +1,21 @@
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\bin\Release\noOS serial user interface.exe.config
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\bin\Release\noOS serial user interface.exe.manifest
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\bin\Release\noOS serial user interface.application
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\bin\Release\noOS serial user interface.exe
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\bin\Release\noOS serial user interface.pdb
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS serial user interface.csprojAssemblyReference.cache
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.menuCamera.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.main.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.menuCompass.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.menuKicker.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.menuLine.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.menuOverview.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.menuSettings.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.menuShutdown.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS_serial_user_interface.Properties.Resources.resources
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS serial user interface.csproj.GenerateResource.cache
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS serial user interface.csproj.CoreCompileInputs.cache
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS serial user interface.exe.manifest
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS serial user interface.application
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS serial user interface.exe
+C:\Users\Marc\Documents\GitHub\noOS-serial-user-interface-windows\noOS serial user interface\noOS serial user interface\obj\Release\noOS serial user interface.pdb

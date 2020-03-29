@@ -32,6 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.ledStateCheckBox = new System.Windows.Forms.CheckBox();
             this.updateFormTimer = new System.Windows.Forms.Timer(this.components);
+            this.startActionButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -57,11 +58,22 @@
             // 
             this.updateFormTimer.Tick += new System.EventHandler(this.updateFormTimer_Tick);
             // 
+            // startActionButton
+            // 
+            this.startActionButton.Location = new System.Drawing.Point(12, 73);
+            this.startActionButton.Name = "startActionButton";
+            this.startActionButton.Size = new System.Drawing.Size(75, 23);
+            this.startActionButton.TabIndex = 3;
+            this.startActionButton.Text = "start action";
+            this.startActionButton.UseVisualStyleBackColor = true;
+            this.startActionButton.Click += new System.EventHandler(this.startActionButton_Click);
+            // 
             // menuOverview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 355);
+            this.Controls.Add(this.startActionButton);
             this.Controls.Add(this.ledStateCheckBox);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -77,5 +89,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox ledStateCheckBox;
         private System.Windows.Forms.Timer updateFormTimer;
+        private System.Windows.Forms.Button startActionButton;
     }
 }

@@ -40,7 +40,7 @@
             // menuCompassLabel
             // 
             this.menuCompassLabel.AutoSize = true;
-            this.menuCompassLabel.Location = new System.Drawing.Point(13, 13);
+            this.menuCompassLabel.Location = new System.Drawing.Point(12, 9);
             this.menuCompassLabel.Name = "menuCompassLabel";
             this.menuCompassLabel.Size = new System.Drawing.Size(78, 13);
             this.menuCompassLabel.TabIndex = 0;

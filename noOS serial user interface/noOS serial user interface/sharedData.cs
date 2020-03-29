@@ -18,6 +18,7 @@ namespace noOS_serial_user_interface
         // tx data
         public static bool ledState = false;
         public static bool setLineCalibration = false;
+        public static bool startAction = false;
         public static byte newLineCalibration = 0;
     }
 }

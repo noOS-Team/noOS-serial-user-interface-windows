@@ -26,5 +26,10 @@ namespace noOS_serial_user_interface
         {
             sharedData.ledState = ledStateCheckBox.Checked;
         }
+
+        private void startActionButton_Click(object sender, EventArgs e)
+        {
+            sharedData.startAction = true;
+        }
     }
 }

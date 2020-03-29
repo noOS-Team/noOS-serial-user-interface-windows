@@ -1,0 +1,6 @@
+0.0 - basic UI
+0.1 - reading serial data
+0.2 - basic functionality
+    0.2.0.0 - first application export
+    0.2.0.1 - automatically close serial port on form exit
+0.3 - ?

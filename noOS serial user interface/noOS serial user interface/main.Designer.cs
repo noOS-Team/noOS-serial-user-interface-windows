@@ -131,6 +131,7 @@
             this.Name = "main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "noOS serial user interface";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.mainFormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

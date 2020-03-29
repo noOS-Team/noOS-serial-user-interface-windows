@@ -20,6 +20,8 @@ namespace noOS_serial_user_interface
         menuCamera mCamera = new menuCamera() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true };
         menuCompass mCompass = new menuCompass() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true };
         menuLine mLine = new menuLine() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true };
+        menuSettings mSettings = new menuSettings() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true };
+        menuShutdown mShutdown = new menuShutdown() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true };
 
         public enum MENU
         {
@@ -180,7 +182,9 @@ namespace noOS_serial_user_interface
                 mCamera.setUpdateFormTimer(false);
                 mCompass.setUpdateFormTimer(false);
                 mLine.setUpdateFormTimer(false);
-                
+                mSettings.setUpdateFormTimer(false);
+                mShutdown.setUpdateFormTimer(false);
+
                 switch (selectedMenu)
                 {
                     case MENU.OVERVIEW:
@@ -208,6 +212,16 @@ namespace noOS_serial_user_interface
                         mLine.setUpdateFormTimer(true);
                         mLine.Show();
                         break;
+                    case MENU.SETTINGS:
+                        this.menuPanel.Controls.Add(mSettings);
+                        mSettings.setUpdateFormTimer(true);
+                        mSettings.Show();
+                        break;
+                    case MENU.SHUTDOWN:
+                        this.menuPanel.Controls.Add(mShutdown);
+                        mShutdown.setUpdateFormTimer(true);
+                        mShutdown.Show();
+                        break;
                     default:
                         break;
                 }
@@ -221,19 +235,25 @@ namespace noOS_serial_user_interface
 
                 byte[] txBuf = new byte[2];
 
-                txBuf[0] = (byte)(128 + (sharedData.setLineCalibration ? 2 : 0) + (sharedData.ledState ? 1 : 0));
+                txBuf[0] = (byte)(128 + (sharedData.startAction ? 4 : 0) + (sharedData.setLineCalibration ? 2 : 0) + (sharedData.ledState ? 1 : 0));
                 txBuf[1] = sharedData.newLineCalibration;
 
                 serialComm.Write(txBuf, 0, 2);
 
                 // reset single use variables
                 sharedData.setLineCalibration = false;
+                sharedData.startAction = false;
             }
         }
 
         private void menuListBox_Click(object sender, EventArgs e)
         {
             selectedMenu = (MENU)menuListBox.SelectedIndex;
+        }
+
+        private void mainFormClosing(object sender, FormClosingEventArgs e)
+        {
+            serialComm.Close();
         }
     }
 }
