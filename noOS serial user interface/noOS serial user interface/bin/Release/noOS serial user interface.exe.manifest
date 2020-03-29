@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="noOS serial user interface.exe" size="26072">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="noOS serial user interface.exe" size="27096">
       <assemblyIdentity name="noOS serial user interface" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>Pj2daDJ0StH+ADo1unXHB05OExqd1zxSTKWGmN9uMrA=</dsig:DigestValue>
+        <dsig:DigestValue>0F3uKVNNKVWtodMPEZIMEgM/yPF8JZNIG++o4RGvJto=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

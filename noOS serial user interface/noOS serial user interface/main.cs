@@ -15,6 +15,11 @@ namespace noOS_serial_user_interface
 {
     public partial class main : Form
     {
+        const byte SYNC = 0x55;
+        const byte ESC = 0xAA;
+        const byte ESC_ESC = 0x00;
+        const byte ESC_SYNC = 0x01;
+
         menuOverview mOverview = new menuOverview() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true };
         menuKicker mKicker = new menuKicker() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true };
         menuCamera mCamera = new menuCamera() { Dock = DockStyle.Fill, TopLevel = false, TopMost = true };
@@ -37,14 +42,33 @@ namespace noOS_serial_user_interface
 
         static SerialPort serialComm = new SerialPort();
 
-        static long lastRx = 0;
-        static ushort rxInterval = 0;
-        static long lastTx = 0;
+        bool frameStarted = false;
+        bool escDetected = false;
+        byte[] rxMsg = new byte[32];
+        byte[] txMsg = new byte[32];
+        byte rxByteCnt = 0;
+        byte txByteCnt = 0;
+        byte rxMsgLen = 0;
+        byte rxChecksum = 0;
+        byte txChecksum = 0;
 
-        static byte rxChunk = 1;
+        long lastTx = 0;
+        long lastRx = 0;
+        long rxInterval = 0;
 
-        static ushort absoluteCompassTemp = 0;
-        static ushort relativeCompassTemp = 0;
+        public enum dataRequest_t
+        {
+            DR_BATTERY_P = 0x01,
+            DR_COMPASS,
+            DR_LINE
+        }
+
+        public enum executionCommand_t
+        {
+            EC_UPDATE_LED = 0x80,
+            EC_UPDATE_LINE_CALIBRATION,
+            EC_ACTION,
+        }
 
         static MENU selectedMenu = MENU.OVERVIEW;
         static MENU displayedMenu = (MENU)(-1);
@@ -112,58 +136,82 @@ namespace noOS_serial_user_interface
                 {
                     byte newByte = (byte)newData;
 
-                    if (newByte >= 128)
+                    // detect SYNC character to define frame start
+                    if (newByte == SYNC)
                     {
-                        rxChunk = 1;
-                        rxInterval = (ushort)((DateTime.Now.Ticks - lastRx) / 10000);
-                        lastRx = DateTime.Now.Ticks;
+                        if (frameStarted)
+                        {
+                            //frameError++;
+                        }
+
+                        // start a new frame
+                        frameStarted = true;
+                        rxByteCnt = 0;
                     }
 
-                    switch(rxChunk)
+                    // detect ESC character
+                    if (newByte == ESC)
                     {
-                        case 1:
-                            break;
-                        case 2:
-                            sharedData.batteryPercentage = newByte;
-                            break;
-                        case 3:
-                            sharedData.lineSegment[0] = ((newByte & 0x01) > 0) ? true : false;
-                            sharedData.lineSegment[1] = ((newByte & 0x02) > 0) ? true : false;
-                            sharedData.lineSegment[2] = ((newByte & 0x04) > 0) ? true : false;
-                            sharedData.lineSegment[3] = ((newByte & 0x08) > 0) ? true : false;
-                            sharedData.lineSegment[4] = ((newByte & 0x10) > 0) ? true : false;
-                            sharedData.lineSegment[5] = ((newByte & 0x20) > 0) ? true : false;
-                            sharedData.lineSegment[6] = ((newByte & 0x40) > 0) ? true : false;
-                            break;
-                        case 4:
-                            sharedData.lineSegment[7] = ((newByte & 0x01) > 0) ? true : false;
-                            sharedData.lineSegment[8] = ((newByte & 0x02) > 0) ? true : false;
-                            sharedData.lineSegment[9] = ((newByte & 0x04) > 0) ? true : false;
-                            sharedData.lineSegment[10] = ((newByte & 0x08) > 0) ? true : false;
-                            sharedData.lineSegment[11] = ((newByte & 0x10) > 0) ? true : false;
-                            break;
-                        case 5:
-                            sharedData.currentLineCalibration = newByte;
-                            break;
-                        case 6:
-                            absoluteCompassTemp = newByte;
-                            break;
-                        case 7:
-                            absoluteCompassTemp += (ushort)(newByte << 7);
-                            sharedData.absoluteCompass = (absoluteCompassTemp / 10.0f);
-                            break;
-                        case 8:
-                            relativeCompassTemp = newByte;
-                            break;
-                        case 9:
-                            relativeCompassTemp += (ushort)(newByte << 7);
-                            sharedData.relativeCompass = ((float)(relativeCompassTemp - 1800) / 10.0f);
-                            break;
-                        default:
-                            break;
+                        escDetected = true;
+                    }
+                    else
+                    {
+                        // replace ESC sequence with correct byte
+                        if (escDetected)
+                        {
+                            escDetected = false;
+
+                            switch (newByte)
+                            {
+                                case ESC_ESC:
+                                    newByte = ESC;
+                                    break;
+                                case ESC_SYNC:
+                                    newByte = SYNC;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                     }
 
-                    rxChunk++;
+                    if (frameStarted && !escDetected)
+                    {
+                        switch (rxByteCnt)
+                        {
+                            case 0: // SYNC byte
+                                break;
+                            case 1:
+                                rxMsgLen = newByte;
+                                rxChecksum = 0;
+                                break;
+                            default:
+                                if (rxMsgLen > 0)
+                                {
+                                    rxMsg[rxByteCnt - 2] = newByte;
+                                    rxChecksum += newByte;
+                                    rxMsgLen--;
+                                }
+                                else
+                                {
+                                    // if message is error free then call process handler
+                                    if (rxChecksum == newByte)
+                                    {
+                                        processRxPacket();
+                                    }
+                                    else
+                                    {
+                                        //checksumError++;
+                                    }
+
+                                    frameStarted = false;
+                                    escDetected = false;
+                                }
+                                break;
+                        }
+
+                        rxByteCnt++;
+                    }
                 }
             }
             catch (Exception) { }
@@ -233,16 +281,18 @@ namespace noOS_serial_user_interface
             {
                 lastTx = DateTime.Now.Ticks;
 
-                byte[] txBuf = new byte[2];
-
-                txBuf[0] = (byte)(128 + (sharedData.startAction ? 4 : 0) + (sharedData.setLineCalibration ? 2 : 0) + (sharedData.ledState ? 1 : 0));
-                txBuf[1] = sharedData.newLineCalibration;
-
-                serialComm.Write(txBuf, 0, 2);
-
-                // reset single use variables
-                sharedData.setLineCalibration = false;
-                sharedData.startAction = false;
+                txMsg[0] = SYNC;
+                txByteCnt = 1;
+                addByteToTxBuffer(0x05); // message length spacing
+                txChecksum = 0;
+                addByteToTxBuffer((byte)executionCommand_t.EC_UPDATE_LED);
+                addByteToTxBuffer((byte)(sharedData.ledState ? 1 : 0));
+                addByteToTxBuffer((byte)dataRequest_t.DR_BATTERY_P);
+                addByteToTxBuffer((byte)dataRequest_t.DR_COMPASS);
+                addByteToTxBuffer((byte)dataRequest_t.DR_LINE);
+                //txMsg[1] = (byte)(txByteCnt - 2);
+                addByteToTxBuffer(txChecksum);
+                serialComm.Write(txMsg, 0, txByteCnt);
             }
         }
 
@@ -254,6 +304,69 @@ namespace noOS_serial_user_interface
         private void mainFormClosing(object sender, FormClosingEventArgs e)
         {
             serialComm.Close();
+        }
+
+        void addByteToTxBuffer(byte byteToAdd)
+        {
+            txChecksum += byteToAdd;
+
+            switch (byteToAdd)
+            {
+                case SYNC:
+                    txMsg[txByteCnt++] = ESC;
+                    txMsg[txByteCnt++] = ESC_SYNC;
+                    break;
+                case ESC:
+                    txMsg[txByteCnt++] = ESC;
+                    txMsg[txByteCnt++] = ESC_ESC;
+                    break;
+                default:
+                    txMsg[txByteCnt++] = byteToAdd;
+                    break;
+            }
+        }
+
+        private void processRxPacket()
+        {
+            byte processedBytes = 0;
+
+            while (processedBytes < (rxByteCnt - 2))
+            {
+                if (rxMsg[processedBytes] <= 0x7f) // data request answer
+                {
+                    switch((dataRequest_t)rxMsg[processedBytes])
+                    {
+                        case dataRequest_t.DR_BATTERY_P:
+                            sharedData.batteryPercentage = rxMsg[++processedBytes];
+                            break;
+                        case dataRequest_t.DR_COMPASS:
+                            ushort absoluteCompassTmp = rxMsg[++processedBytes];
+                            sharedData.absoluteCompass = ((float)((rxMsg[++processedBytes] << 8) + absoluteCompassTmp) / 10.0f);
+                            ushort relativeCompassTmp = rxMsg[++processedBytes];
+                            sharedData.relativeCompass = ((float)(((rxMsg[++processedBytes] << 8) + relativeCompassTmp) - 1800) / 10.0f);
+                            break;
+                        case dataRequest_t.DR_LINE:
+                            sharedData.lineSegment[0] = ((rxMsg[++processedBytes] & 0x01) > 0 ? true : false);
+                            sharedData.lineSegment[1] = ((rxMsg[processedBytes] & 0x02) > 0 ? true : false);
+                            sharedData.lineSegment[2] = ((rxMsg[processedBytes] & 0x04) > 0 ? true : false);
+                            sharedData.lineSegment[3] = ((rxMsg[processedBytes] & 0x08) > 0 ? true : false);
+                            sharedData.lineSegment[4] = ((rxMsg[processedBytes] & 0x10) > 0 ? true : false);
+                            sharedData.lineSegment[5] = ((rxMsg[processedBytes] & 0x20) > 0 ? true : false);
+                            sharedData.lineSegment[6] = ((rxMsg[processedBytes] & 0x40) > 0 ? true : false);
+                            sharedData.lineSegment[7] = ((rxMsg[processedBytes] & 0x80) > 0 ? true : false);
+                            sharedData.lineSegment[8] = ((rxMsg[++processedBytes] & 0x01) > 0 ? true : false);
+                            sharedData.lineSegment[9] = ((rxMsg[processedBytes] & 0x02) > 0 ? true : false);
+                            sharedData.lineSegment[10] = ((rxMsg[processedBytes] & 0x04) > 0 ? true : false);
+                            sharedData.lineSegment[11] = ((rxMsg[processedBytes] & 0x08) > 0 ? true : false);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else {}
+
+                processedBytes++;
+            }
         }
     }
 }
